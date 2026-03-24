@@ -553,6 +553,84 @@
     }
 
     .sparkle-btn:active { transform: scale(0.97); }
+
+    /* ── COUNTDOWN ── */
+    .countdown-section {
+      max-width: 680px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .countdown-card {
+      background: linear-gradient(135deg, rgba(109,40,217,0.12), rgba(236,72,153,0.12));
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 24px;
+      padding: 36px 40px;
+      box-shadow: 0 20px 60px rgba(168,85,247,0.18);
+    }
+
+    .countdown-heading {
+      font-size: 1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #db2777;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .countdown-venue {
+      font-size: 1.25rem;
+      color: #4a1d96;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .countdown-tiles {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cd-tile {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px 12px;
+      min-width: 80px;
+      box-shadow: 0 8px 24px rgba(168,85,247,0.12);
+      transition: transform 0.3s ease;
+    }
+
+    .cd-tile:hover { transform: translateY(-4px); }
+
+    .cd-num {
+      font-size: 2.4rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #f5576c, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      display: block;
+    }
+
+    .cd-label {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #7c3aed;
+      font-weight: 600;
+      margin-top: 6px;
+      display: block;
+    }
+
+    .countdown-done {
+      font-size: 1.6rem;
+      color: #db2777;
+      font-weight: bold;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
@@ -659,6 +737,20 @@
       <video controls>
         <source src="video.mp4" type="video/mp4" />
       </video>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown-section reveal">
+      <div class="countdown-card">
+        <div class="countdown-heading">🗓️ Your celebration begins in</div>
+        <div class="countdown-venue">Yamazato · Hotel Okura · March 28 at 7:30 PM 🍣</div>
+        <div class="countdown-tiles" id="countdown">
+          <div class="cd-tile"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
+          <div class="cd-tile"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Hours</span></div>
+          <div class="cd-tile"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Minutes</span></div>
+          <div class="cd-tile"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Seconds</span></div>
+        </div>
+      </div>
     </div>
 
     <div class="balloons reveal">🎈🎈🎈🎈🎈</div>
@@ -792,6 +884,33 @@
       if (e.key === 'ArrowLeft') shiftPhoto(-1);
       if (e.key === 'ArrowRight') shiftPhoto(1);
     });
+
+    // ── COUNTDOWN ──
+    const target = new Date('2026-03-28T19:30:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML =
+          '<p class="countdown-done">🎉 It\'s time — tonight is yours, Eli! 🎉</p>';
+        return;
+      }
+
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+
+      document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
+      document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+      document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
+      document.getElementById('cd-secs').textContent  = String(s).padStart(2,'0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
     // ── CONFETTI CELEBRATION ──
     function launchCelebration() {
